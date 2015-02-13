@@ -70,26 +70,26 @@
     With linqr.js the process is simplified, in each file just include the files that that file depends on.
 
     -------------------------------------------------
-    foo.js source:
-        ```
+    **foo.js source:**
+
         include("bar.js");
 
         FOO = (function() {
             ....
         })();
-        ```
+
     -------------------------------------------------
-    mainscript.js source:
-        ```
+    **mainscript.js source:**
+
         include("foo.js");
 
         Module = (function() {
             ....
         })();
-        ```
+
     -------------------------------------------------
-    index.html source:
-        ```
+    **index.html source:**
+
         <html>
         ...
         <script>
@@ -98,6 +98,6 @@
         </script>
         ...
         </html>
-        ```
+
     -------------------------------------------------
 
