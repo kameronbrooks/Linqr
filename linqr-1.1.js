@@ -82,9 +82,9 @@ var linqrJS = (function() {
             try {
                 if(unit.name) {
 
-                    window[unit.name] = (1,eval)(unit.source);
+                    window[unit.name] = (function(){return eval(unit.source)})();
                 } else {
-                    (1,eval)(unit.source);
+                    (function(){eval(unit.source)})();
                 }
 
             } catch ( ex ) {
