@@ -55,41 +55,37 @@ Module; //very important that the module to include is the last thing in the fil
     - You can include files from included files
 
 #HOW IT WORKS
-        Basically, the the include function in this file is similar to the C/C++ #include directive. You can use the
-    include function to load javascript files that your script depends on. This function makes sure that all the
-    files are loaded in the proper order. For example, if my main script depends on a module in the file "foo.js"
-    and the module in "foo.js" requires a function in a module in "bar.js", I can include "foo.js" from my main
-    script which incudes "bar.js" and everything will work fine.
-        Using the usual pattern, you would have to place three script tags in my html file:
+    Basically, the the include function in this file is similar to the C/C++ #include directive. You can use the include function to load javascript files that your script depends on. This function makes sure that all the files are loaded in the proper order. For example, if my main script depends on a module in the file "foo.js" and the module in "foo.js" requires a function in a module in "bar.js", I can include "foo.js" from my main script which incudes "bar.js" and everything will work fine.
+    Using the usual pattern, you would have to place three script tags in my html file:
 ```
-            <script src="bar.js"></script>
-            <script src="foo.js"></script>
-            <script src="mainscript.js"></script>
+<script src="bar.js"></script>
+<script src="foo.js"></script>
+<script src="mainscript.js"></script>
 ```
-        They would have to be in order of dependency, mainscript depends on foo depends on bar so, bar <- foo <- mainscript
+     They would have to be in order of dependency, mainscript depends on foo depends on bar so, bar <- foo <- mainscript.
     With linqr.js the process is simplified, in each file just include the files that that file depends on.
 
-
-    **foo.js source:**
 ```javascript
+    /*foo.js source:*/
+
         include("bar.js");
 
         FOO = (function() {
             ....
         })();
 ```
-
-    **mainscript.js source:**
 ```javascript
+    /*mainscript.js source:*/
+
         include("foo.js");
 
         Module = (function() {
             ....
         })();
 ```
-
-    **index.html source:**
 ```javascript
+    /*index.html source:*/
+
         <html>
         ...
         <script>
@@ -99,5 +95,5 @@ Module; //very important that the module to include is the last thing in the fil
         ...
         </html>
 ```
-    -------------------------------------------------
+
 
