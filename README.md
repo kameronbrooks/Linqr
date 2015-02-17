@@ -51,7 +51,7 @@ Avoid circular references. If file A includes file B, then file B can't include 
 * Author: Kameron Brooks
 * kameron.cw.11@gmail.com
 * follow @wasteland_11
-* http://creation-wateland.com
+* http://creation-wasteland.com
 
 
     
