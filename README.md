@@ -1,99 +1,60 @@
-#BASIC MECHANICS OF THE LINQR.JS LIBRARY
-- linqr-x.x(.min).js must be included in the head of the HTML page via script tag:
-`<script src="linqr-1.1.js"></script>`
-
-- Including files is as simple as:
-`include("filename.js");`
-  *(USAGE 1) `include("filename.js");`
-        This includes the module anonymously, this is best for files that do not have a module structure and just contain functions and global variables, or have modules that already have a name and do not need to be assigned one.
-
-  *(USAGE 2) `include("filename.js","ModuleName");`
-   This includes the last specified module/object in the file as a global object by the name of the speceified name, in this case that would be "ModuleName", Note that this usage does not make sense if the file is not a in the Module Pattern.
-
-Things that work with this usage:
+#Linqr.js
+Linqr.js adds the ability to include javascript files from other javascript files, in a style similar to C/C++/PHP. With linqr.js, you can dynamically include javascript files without adding the script tags to your html documents. You can include a module which includes another module which includes another module, and all three javascript files will be included in the correct order. Linqr.js is easy to use, and the basic structure of your linqr.js program will be familiar to anyone with from a C/C++/Java background.
+###A Basic Linqr.js Application
 ```javascript
-(function(){
-    var bar="bar"
-    function foo() {
+//index.html
+<html>
+    <head>
+        <script src="linqr-x.x.js"></script>
+    </head>
+    ...
+    <script>
+        include("Module1.js");      // include the file Module1.js
+       
+        function main() {           // linqrJS calls main function when the window and all included files are loaded
+            Module1.function1();    // caling a function from a module loaded from file Module1.js
+        }
+    </script>
+</html>
+```
+###How It Works
+Linqr.js asynchronously loads all the files specified in the include functions throughought your project. After the files are loaded, they are evaluated in the correct order so that each files dependencies are evaluated before the file itself. When all included files are loaded and evaluated, and the window is loaded, a user defined main function is called if there is one. This pattern is somewhat similar to C. 
+###Main
+All of your code that depends on the included files being loaded should go in a function called main. this main funtion can be anywhere in any included file, as long as there is a function called main in the global scope, it will be called when the page is ready. 
 
+```javascript
+//index.html
+...
+<script>
+    include("Module1.js");
+    Module1.funtion1(); // error, Module1 is undefined because the file has not been loaded
+    function main() {
+        Module1.function1(); // no error, main is called after everything is loaded
     }
-     return {
-        foo: foo,
-        bar: bar
-    }
-})();
+</script>
 ```
-OR,
-```javascript
-var Module = (function(){
-    var bar="bar"
-    function foo() {
 
-    }
-     return {
-        foo: foo,
-        bar: bar
-    }
-})();
+###Include
+The include funtion is the way in which files are linked to one another in linqr.js. If you include file B in file A, then file A depends on file B being loaded and evaluated first. Multiple files can be included from the same file resulting in identical behavior as the example above.There are ways in which the include function can be used.
 
-Module.prototype.foobar = function() {
-    alert("foo bar!");
-}
+ 1. **The first way is:** `include("filename.js")`
+    - This usage simply includes the file in global scope, as you would expect
+ 2. **The second way is:** `include("filename.js","ModuleName")`
+    - This usage includes the module/object in the file as an object in global scope by the name specified by the second argument. 
+    - *This usage accomodates the module pattern, and does not make sence to use with files that are not modules.*
+    - *Note that this function will assign only the last object in the file to the specified name. Make sure the object you want to "export" is the last object in the file.*
+        
+###Notes
+Avoid circular references. If file A includes file B, then file B can't include file A. Logically one is going to have to load before the other so they both can't depend on eachother. Bad things will happen.
 
-Module; //very important that the module to include is the last thing in the file
-```
-- IMPORTANT NOTES:
-    - ~~Global Variables in included files must NOT have "var" in front (Very Important)~~
-    - ~~In an included file any functions declared in "global" scope must be defined like:~~
-        ~~(ex.) functionName = function() {~~
+-----------
+* Author: Kameron Brooks
+* kameron.cw.11@gmail.com
+* follow @wasteland_11
+* http://creation-wateland.com
 
-        ~~};~~
-    ~~instead of:~~
-        ~~(ex.) function functionName() {~~
 
-        ~~}~~
-    - You can include files from included files
-
-#HOW IT WORKS
-    Basically, the the include function in this file is similar to the C/C++ #include directive. You can use the include function to load javascript files that your script depends on. This function makes sure that all the files are loaded in the proper order. For example, if my main script depends on a module in the file "foo.js" and the module in "foo.js" requires a function in a module in "bar.js", I can include "foo.js" from my main script which incudes "bar.js" and everything will work fine.
-    Using the usual pattern, you would have to place three script tags in my html file:
-```
-<script src="bar.js"></script>
-<script src="foo.js"></script>
-<script src="mainscript.js"></script>
-```
-     They would have to be in order of dependency, mainscript depends on foo depends on bar so, bar <- foo <- mainscript.
-    With linqr.js the process is simplified, in each file just include the files that that file depends on.
-
-```javascript
-    /*foo.js source:*/
-
-        include("bar.js");
-
-        FOO = (function() {
-            ....
-        })();
-```
-```javascript
-    /*mainscript.js source:*/
-
-        include("foo.js");
-
-        Module = (function() {
-            ....
-        })();
-```
-```javascript
-    /*index.html source:*/
-
-        <html>
-        ...
-        <script>
-            include("mainscript.js");
-
-        </script>
-        ...
-        </html>
-```
+    
+    
 
 
